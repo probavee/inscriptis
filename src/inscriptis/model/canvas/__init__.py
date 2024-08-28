@@ -113,7 +113,7 @@ class Canvas:
 
             for annotation in tag.annotation:
                 self.annotations.append(
-                    Annotation(start_idx, self.current_block.idx, annotation)
+                    Annotation(start_idx, self.current_block.idx, {"name":annotation})
                 )
 
     def close_block(self, tag: HtmlElement) -> None:

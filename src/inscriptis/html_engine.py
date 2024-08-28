@@ -98,12 +98,11 @@ class Inscriptis:
         """
         if isinstance(tree.tag, str):
             state.apply_starttag_layout(tree.tag, tree.attrib)
-
+            # state.canvas.annotations.append(tree.attrib)
             if handler := self.start_tag_handler_dict.get(tree.tag):
                 handler(state, tree.attrib)
             cur = state.tags[-1]
             cur.canvas.open_tag(cur)
-
             state.tags[-1].write(tree.text)
 
             for node in tree:
@@ -120,7 +119,11 @@ class Inscriptis:
 
         elif tree.tag is Comment and tree.tail:
             state.tags[-1].canvas.write(state.tags[-1], tree.tail)
-
+        if state.canvas.annotations:
+            if "attrs" in state.canvas.annotations[-1].metadata:
+                state.canvas.annotations[-1].metadata["attrs"].update(tree.attrib)
+            else:
+                state.canvas.annotations[-1].metadata["attrs"] = tree.attrib
         return state.canvas
 
     def get_text(self) -> str:
